@@ -11,7 +11,7 @@ A small Rust CLI that prints a consolidated, color-coded view of the user's pers
 - Tables: `comfy-table`
 - Colors: `owo-colors`
 - JSON: `serde` / `serde_json`
-- Time: `chrono`
+- Time: `jiff`
 - Authentication: shells out to `gh` CLI — no token handling in this codebase
 
 ## Commands

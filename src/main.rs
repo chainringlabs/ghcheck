@@ -4,8 +4,8 @@ mod render;
 mod text;
 
 use anyhow::Result;
-use chrono::{Duration, Utc};
 use clap::Parser;
+use jiff::{SignedDuration, Timestamp};
 
 /// How far back to look for merged PRs when checking post-merge CI.
 const POST_MERGE_LOOKBACK_DAYS: i64 = 7;
@@ -99,8 +99,9 @@ fn run() -> Result<()> {
     let prs = github::fetch_prs(&owner)?;
     let filtered = render::filter(prs, cli.failing, cli.bot, cli.no_drafts);
 
-    let since = (Utc::now() - Duration::days(POST_MERGE_LOOKBACK_DAYS))
-        .format("%Y-%m-%d")
+    let lookback = SignedDuration::from_hours(24 * POST_MERGE_LOOKBACK_DAYS);
+    let since = (Timestamp::now() - lookback)
+        .strftime("%Y-%m-%d")
         .to_string();
     let merged = github::fetch_merged_prs(&owner, &since)?;
     let post_merge_failures = render::latest_failing_per_repo(merged);

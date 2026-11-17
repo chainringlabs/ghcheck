@@ -52,7 +52,7 @@ ghcheck --json               # machine-readable output
 - Tables: `comfy-table`
 - Colors: `owo-colors`
 - JSON: `serde` / `serde_json`
-- Time: `chrono`
+- Time: `jiff`
 
 ## Contributing
 

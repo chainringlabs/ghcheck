@@ -1,8 +1,8 @@
 use crate::model::{CheckContext, Mergeability, MergedPullRequest, PullRequest, Verdict};
 use crate::text::sanitize;
-use chrono::{DateTime, Utc};
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::{Cell, ContentArrangement, Table};
+use jiff::Timestamp;
 use owo_colors::OwoColorize;
 use std::collections::HashSet;
 
@@ -207,10 +207,8 @@ fn partition_mergeability<'a>(
 /// depend on GitHub continuing to serialize fixed-width RFC3339 `…Z` values. An
 /// unparseable timestamp sorts oldest, so a record we cannot place can never
 /// win the newest slot and supersede a real verdict.
-fn merged_at_key(pr: &MergedPullRequest) -> Option<DateTime<Utc>> {
-    DateTime::parse_from_rfc3339(&pr.merged_at)
-        .ok()
-        .map(|t| t.with_timezone(&Utc))
+fn merged_at_key(pr: &MergedPullRequest) -> Option<Timestamp> {
+    pr.merged_at.parse().ok()
 }
 
 /// Order a failing verdict ahead of any other, for use as a tie-break.
@@ -333,19 +331,19 @@ fn truncate(s: &str, max: usize) -> String {
 }
 
 fn humanize_age(created_at: &str) -> String {
-    let Ok(parsed) = DateTime::parse_from_rfc3339(created_at) else {
+    let Ok(parsed) = created_at.parse::<Timestamp>() else {
         return "?".to_string();
     };
-    let diff = Utc::now().signed_duration_since(parsed.with_timezone(&Utc));
-    let days = diff.num_days();
+    let diff = Timestamp::now().duration_since(parsed);
+    let days = diff.as_hours() / 24;
     if days >= 1 {
         return format!("{days}d");
     }
-    let hours = diff.num_hours();
+    let hours = diff.as_hours();
     if hours >= 1 {
         return format!("{hours}h");
     }
-    let minutes = diff.num_minutes().max(0);
+    let minutes = diff.as_mins().max(0);
     format!("{minutes}m")
 }
 

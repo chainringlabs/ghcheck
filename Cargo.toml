@@ -6,6 +6,7 @@ license = "MIT"
 publish = false
 description = "Quick consolidated status of your personal GitHub PRs and CI"
 authors = ["T.J. Greco <tgrecojr@gmail.com>"]
+repository = "https://github.com/chainringlabs/ghcheck"
 
 [dependencies]
 anyhow = "1.0.104"

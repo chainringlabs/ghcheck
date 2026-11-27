@@ -10,7 +10,7 @@ repository = "https://github.com/chainringlabs/ghcheck"
 
 [dependencies]
 anyhow = "1.0.104"
-clap = { version = "4.6.8", features = ["derive"] }
+clap = { version = "4.6.9", features = ["derive"] }
 comfy-table = { version = "8.0.1", features = ["custom_styling"] }
 # Only UTC instants are used, so the time-zone database features stay off.
 jiff = { version = "1.0.1", default-features = false, features = ["std"] }
